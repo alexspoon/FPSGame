@@ -20,6 +20,15 @@ public partial class PlayerStatsComponent : Node
     [Export] public float JumpForce;
     [Export] public int MaxJumps;
     [Export] public float Gravity;
+    [Export] public float DashSpeedMultiplier;
+    [Export] public float DashLength;
+    [Export] public float DashCooldown;
+    [Export] public float WeaponDamage;
+    [Export] public float WeaponFireRate;
+    [Export] public float WeaponReloadTime;
+    [Export] public int WeaponAmmoCount;
+    [Export] public int WeaponMagazineSize;
+    [Export] public int WeaponShotCount;
     
     public override void _Ready()
     {

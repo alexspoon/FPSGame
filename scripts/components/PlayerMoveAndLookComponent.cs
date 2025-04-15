@@ -25,6 +25,7 @@ public partial class PlayerMoveAndLookComponent : Node
     private float _moveMaxSpeed;
     private float _moveAcceleration;
     private float _moveDrag;
+    private float _dashSpeedMultiplier;
     private Vector3 _targetVelocity;
     private Vector3 _direction;
     
@@ -88,6 +89,9 @@ public partial class PlayerMoveAndLookComponent : Node
         _jumpForce = _statsComponent.JumpForce;
         _maxJumps = _statsComponent.MaxJumps;
         _gravity = _statsComponent.Gravity;
+        _dashTimer.WaitTime = _statsComponent.DashLength;
+        _dashCooldown.WaitTime = _statsComponent.DashCooldown;
+        _dashSpeedMultiplier = _statsComponent.DashSpeedMultiplier;
     }
     
     public override void _Process(double delta)
@@ -127,8 +131,8 @@ public partial class PlayerMoveAndLookComponent : Node
 
         if (Input.IsActionJustPressed("inputShift") && _dashTimer.IsStopped() && _canDash)
         {
-            _moveMaxSpeed *= 4;
-            _moveAcceleration *= 4;
+            _moveMaxSpeed *= _dashSpeedMultiplier;
+            _moveAcceleration *= _dashSpeedMultiplier;
             _dashTimer.Start();
             _dashCooldown.Start();
             _isDashing = true;
@@ -169,8 +173,8 @@ public partial class PlayerMoveAndLookComponent : Node
     private void DashTimerTimeout()
     {
         _isDashing = false;
-        _moveMaxSpeed /= 4;
-        _moveAcceleration /= 4;
+        _moveMaxSpeed /= _dashSpeedMultiplier;
+        _moveAcceleration /= _dashSpeedMultiplier;
     }
 
     private void DashCooldownTimeout()
