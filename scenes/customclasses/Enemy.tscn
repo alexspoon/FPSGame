@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3 uid="uid://cwo4bn7huxhl"]
+
+[ext_resource type="Script" uid="uid://dpdncbj4aw05k" path="res://scripts/components/EnemyHealthComponent.cs" id="1_057er"]
+[ext_resource type="Script" uid="uid://doi7c40yqlo76" path="res://scripts/customclasses/Enemy.cs" id="1_yrlgc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pexcb"]
+albedo_color = Color(0.947332, 0.000691687, 0.000378693, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_057er"]
+material = SubResource("StandardMaterial3D_pexcb")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yrlgc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_057er"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.752941, 0, 0, 0.709804)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+corner_detail = 6
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_057er"]
+viewport_path = NodePath("HealthBarViewport")
+
+[node name="Enemy" type="CharacterBody3D"]
+script = ExtResource("1_yrlgc")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_057er")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_yrlgc")
+
+[node name="Components" type="Node" parent="."]
+
+[node name="EnemyHealthComponent" type="Node" parent="Components"]
+script = ExtResource("1_057er")
+
+[node name="HealthBarViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(200, 30)
+
+[node name="HealthBar" type="ProgressBar" parent="HealthBarViewport"]
+anchors_preset = -1
+anchor_left = 0.00390625
+anchor_top = 0.0263672
+anchor_right = 0.996094
+anchor_bottom = 0.973633
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/fill = SubResource("StyleBoxFlat_057er")
+metadata/_edit_use_anchors_ = true
+
+[node name="HealthBar3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+billboard = 1
+texture = SubResource("ViewportTexture_057er")

@@ -12,8 +12,11 @@ public partial class PlayerWeaponComponent : Node
     private Timer _reloadTimer;
     private Control _hud;
     private Label _ammoCounter;
-
+    [Export] private PackedScene _projectile;
+    
     private float _damage;
+    private float _range;
+    private float _velocity;
     private float _fireRate;
     private float _reloadTime;
     private int _ammoCount;
@@ -66,6 +69,9 @@ public partial class PlayerWeaponComponent : Node
         _ammoCount = _statsComponent.WeaponAmmoCount;
         _magazineSize = _statsComponent.WeaponMagazineSize;
         _shotCount = _statsComponent.WeaponShotCount;
+        _velocity = _statsComponent.WeaponVelocity;
+        _range = _statsComponent.WeaponRange;
+        _headRay.TargetPosition = new Vector3(0, 0, -_range);
     }
 
     private void Fire()
@@ -78,6 +84,11 @@ public partial class PlayerWeaponComponent : Node
         if (!_reloadTimer.IsStopped()) return;
         if (!_fireRateTimer.IsStopped()) return;
 
+        if (_headRay.IsColliding() && _headRay.GetCollider() is Enemy)
+        {
+            var enemy = _headRay.GetCollider() as Enemy;
+            enemy.HealthComponent.Damage(_damage);
+        }
         _fireRateTimer.Start();
         _ammoLoaded -= _shotCount;
         _ammoCounter.Text = _ammoLoaded + " / " + _ammoCount;

@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://bohuyuula82ty"]
+
+[ext_resource type="Script" uid="uid://c0cy6o7c0w3wt" path="res://scripts/customclasses/Upgrade.cs" id="1_gqayp"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_fa47x"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fa47x"]
+
+[node name="Upgrade" type="RigidBody3D"]
+script = ExtResource("1_gqayp")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_fa47x")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_fa47x")

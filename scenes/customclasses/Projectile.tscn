@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://c3acm5ptqv6em"]
+
+[ext_resource type="Script" uid="uid://do44vxm07ncxs" path="res://scripts/customclasses/Projectile.cs" id="1_3o5ye"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_3o5ye"]
+radius = 0.1
+height = 0.2
+
+[node name="Projectile" type="Node3D"]
+script = ExtResource("1_3o5ye")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_3o5ye")
+
+[node name="CollisionRay" type="RayCast3D" parent="."]
+target_position = Vector3(0, 0, 0)

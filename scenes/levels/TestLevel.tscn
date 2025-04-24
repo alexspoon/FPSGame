@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://bddamcig7tmgi"]
+[gd_scene load_steps=10 format=3 uid="uid://bddamcig7tmgi"]
 
 [ext_resource type="Script" uid="uid://blqlv814q7nck" path="res://scripts/customclasses/Level.cs" id="1_86d4f"]
 [ext_resource type="Texture2D" uid="uid://gxae6vdnnubl" path="res://assets/textures/tiles_floor_1.png" id="2_3wv3p"]
 [ext_resource type="PackedScene" uid="uid://c7p3ssubs3ofm" path="res://scenes/Player.tscn" id="3_3wv3p"]
+[ext_resource type="PackedScene" uid="uid://cwo4bn7huxhl" path="res://scenes/customclasses/Enemy.tscn" id="4_timdk"]
+[ext_resource type="PackedScene" uid="uid://bohuyuula82ty" path="res://scenes/customclasses/Upgrade.tscn" id="5_j0sv7"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_86d4f"]
 sky_top_color = Color(1, 0.623362, 0.566225, 1)
@@ -53,3 +55,12 @@ material = SubResource("StandardMaterial3D_3wv3p")
 
 [node name="Player" parent="." instance=ExtResource("3_3wv3p")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -1)
+
+[node name="Enemy" parent="." instance=ExtResource("4_timdk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.57526, 0.999996, -4.20482)
+
+[node name="Enemy2" parent="." instance=ExtResource("4_timdk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.07087, 0.999996, -9.30286)
+
+[node name="Upgrade" parent="." instance=ExtResource("5_j0sv7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.44714, 2.74369, 2.18978)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c7p3ssubs3ofm"]
+[gd_scene load_steps=14 format=3 uid="uid://c7p3ssubs3ofm"]
 
 [ext_resource type="Script" uid="uid://bvmsyp4ogjup" path="res://scripts/components/PlayerMoveAndLookComponent.cs" id="1_p0vlq"]
 [ext_resource type="Script" uid="uid://cj15jyaf6wor4" path="res://scripts/components/PlayerHealthComponent.cs" id="2_v6fml"]
@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://beo8k1527w5b" path="res://assets/textures/crosshair009.png" id="4_mdl7e"]
 [ext_resource type="Script" uid="uid://3bpajiqoi8i" path="res://scripts/components/PlayerWeaponComponent.cs" id="4_qu4a1"]
 [ext_resource type="FontFile" uid="uid://b1m5wftfrt8kf" path="res://assets/fonts/yoster.ttf" id="5_70d11"]
+[ext_resource type="PackedScene" uid="uid://c3acm5ptqv6em" path="res://scenes/customclasses/Projectile.tscn" id="5_cw2d6"]
+[ext_resource type="Script" uid="uid://bbayh2f8pqche" path="res://scripts/components/PlayerUIComponent.cs" id="6_khinc"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_5q5h1"]
 
@@ -49,6 +51,10 @@ one_shot = true
 [node name="DashCooldown" type="Timer" parent="Components/PlayerMoveAndLookComponent"]
 one_shot = true
 
+[node name="SlideTimer" type="Timer" parent="Components/PlayerMoveAndLookComponent"]
+wait_time = 0.5
+one_shot = true
+
 [node name="PlayerHealthComponent" type="Node" parent="Components"]
 script = ExtResource("2_v6fml")
 
@@ -62,23 +68,31 @@ JumpForce = 10.0
 MaxJumps = 2
 Gravity = 9.82
 DashSpeedMultiplier = 3.0
+SlideSpeedMultiplier = 1.5
 DashLength = 0.2
 DashCooldown = 1.0
-WeaponDamage = 5.0
+WeaponDamage = 10.0
 WeaponFireRate = 0.1
 WeaponReloadTime = 1.0
+WeaponVelocity = 50.0
+WeaponRange = 20.0
 WeaponAmmoCount = 128
 WeaponMagazineSize = 8
 WeaponShotCount = 1
 
 [node name="PlayerWeaponComponent" type="Node" parent="Components"]
 script = ExtResource("4_qu4a1")
+_projectile = ExtResource("5_cw2d6")
 
 [node name="FireRateTimer" type="Timer" parent="Components/PlayerWeaponComponent"]
 one_shot = true
 
 [node name="ReloadTimer" type="Timer" parent="Components/PlayerWeaponComponent"]
 one_shot = true
+
+[node name="PlayerUIComponent" type="Node" parent="Components"]
+process_mode = 3
+script = ExtResource("6_khinc")
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_5q5h1")
@@ -90,6 +104,7 @@ shape = SubResource("CapsuleShape3D_5q5h1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 
 [node name="FPSCamera" type="Camera3D" parent="Head"]
+physics_interpolation_mode = 1
 
 [node name="HeadRay" type="RayCast3D" parent="Head"]
 target_position = Vector3(0, 0, -10)
@@ -153,3 +168,58 @@ pivot_offset = Vector2(18, 18)
 texture = ExtResource("4_mdl7e")
 expand_mode = 1
 metadata/_edit_use_anchors_ = true
+
+[node name="UI" type="Control" parent="."]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="PauseMenu" type="Panel" parent="UI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.430556
+anchor_top = 0.314815
+anchor_right = 0.569444
+anchor_bottom = 0.685185
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(80, 120)
+metadata/_edit_use_anchors_ = true
+
+[node name="ButtonContainer" type="VBoxContainer" parent="UI/PauseMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.01875
+anchor_top = 0.0125
+anchor_right = 0.98125
+anchor_bottom = 0.9875
+theme_override_constants/separation = 16
+alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="ResumeButton" type="Button" parent="UI/PauseMenu/ButtonContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("5_70d11")
+theme_override_font_sizes/font_size = 24
+text = "Resume"
+
+[node name="SettingsButton" type="Button" parent="UI/PauseMenu/ButtonContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("5_70d11")
+theme_override_font_sizes/font_size = 24
+text = "Settings"
+
+[node name="QuitButton" type="Button" parent="UI/PauseMenu/ButtonContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("5_70d11")
+theme_override_font_sizes/font_size = 24
+text = "Quit"

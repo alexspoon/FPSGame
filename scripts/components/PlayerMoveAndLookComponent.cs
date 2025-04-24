@@ -14,23 +14,28 @@ public partial class PlayerMoveAndLookComponent : Node
     private Timer _dashCooldown;
     private Control _hud;
     private Label _speedometer;
+    private Timer _slideTimer;
     
     //State variables
     private bool _canDash;
     private bool _isDashing;
     private bool _canMove;
     private bool _isMoving;
+    private bool _canSlide;
+    private bool _isSliding;
     
     //Move variables
     private float _moveMaxSpeed;
     private float _moveAcceleration;
     private float _moveDrag;
     private float _dashSpeedMultiplier;
+    private float _slideSpeedMultiplier;
     private Vector3 _targetVelocity;
     private Vector3 _direction;
     
     //FOV Variables
     [Export] private float _dashFov = 100f;
+    [Export] private float _slideFov = 90f;
     [Export] private float _normalFov = 80f;
     [Export] private float _aimFov = 40f;
     
@@ -69,15 +74,18 @@ public partial class PlayerMoveAndLookComponent : Node
         _dashCooldown = GetNode<Timer>("DashCooldown");
         _hud = _player.GetNode<Control>("HUD");
         _speedometer = _hud.GetNode<Label>("Speedometer");
+        _slideTimer = GetNode<Timer>("SlideTimer");
         
         //Subscribe to signals
         _dashTimer.Timeout += DashTimerTimeout;
         _dashCooldown.Timeout += DashCooldownTimeout;
+        _slideTimer.Timeout += SlideTimerTimeout;
         
         //Initialize values
         MoveAndLookSyncStats();
         ResetJumps();
         _canDash = true;
+        _canSlide = true;
         Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
@@ -92,6 +100,7 @@ public partial class PlayerMoveAndLookComponent : Node
         _dashTimer.WaitTime = _statsComponent.DashLength;
         _dashCooldown.WaitTime = _statsComponent.DashCooldown;
         _dashSpeedMultiplier = _statsComponent.DashSpeedMultiplier;
+        _slideSpeedMultiplier = _statsComponent.SlideSpeedMultiplier;
     }
     
     public override void _Process(double delta)
@@ -137,6 +146,18 @@ public partial class PlayerMoveAndLookComponent : Node
             _dashCooldown.Start();
             _isDashing = true;
             _canDash = false;
+        }
+
+        if (Input.IsActionJustPressed("inputControl") && _slideTimer.IsStopped() && _canSlide && _player.IsOnFloor())
+        {
+            var headPos = _head.Position;
+            headPos.Y -= 1;
+            _head.Position = headPos;
+            _moveMaxSpeed *= _slideSpeedMultiplier;
+            _moveAcceleration *= _slideSpeedMultiplier;
+            _slideTimer.Start();
+            _isSliding = true;
+            _canSlide = false;
         }
 
         var targetVelocityWithoutY = new Vector3(_targetVelocity.X, 0, _targetVelocity.Z);
@@ -195,5 +216,24 @@ public partial class PlayerMoveAndLookComponent : Node
     {
         _jumpsLeft = _maxJumps;
     }
+
+    private void SlideTimerTimeout()
+    {
+        _isSliding = false;
+        _canSlide = true;
+        _moveMaxSpeed /= _slideSpeedMultiplier;
+        _moveAcceleration /= _slideSpeedMultiplier;
+        var headPos = _head.Position;
+        headPos.Y += 1;
+        _head.Position = headPos;
+    }
     
+    private void SlideUpdate(float delta)
+    {
+        if (_isSliding && _direction != Vector3.Zero)
+        {
+            _camera.Fov = Mathf.Lerp(_camera.Fov, _slideFov, 5f * delta);
+        }
+        else _camera.Fov = Mathf.Lerp(_camera.Fov, _normalFov, 3f * delta);
+    }
 }
