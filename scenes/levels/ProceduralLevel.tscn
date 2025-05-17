@@ -1,0 +1,69 @@
+[gd_scene load_steps=11 format=3 uid="uid://btblem7ybd0n3"]
+
+[ext_resource type="Script" uid="uid://blqlv814q7nck" path="res://scripts/customclasses/Level.cs" id="1_cocl3"]
+[ext_resource type="PackedScene" uid="uid://c7p3ssubs3ofm" path="res://scenes/Player.tscn" id="1_eqpti"]
+[ext_resource type="MeshLibrary" uid="uid://cnr7y8tx6o75s" path="res://assets/meshlibraries/TestMeshLibrary.tres" id="1_m03e6"]
+[ext_resource type="Script" uid="uid://cpddrk6v51xl2" path="res://scripts/customclasses/ProceduralGridmap.cs" id="3_xj34p"]
+
+[sub_resource type="Gradient" id="Gradient_pq6g1"]
+interpolation_mode = 2
+colors = PackedColorArray(1, 0, 0, 1, 0, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ny2au"]
+noise_type = 4
+metadata/_preview_in_3d_space_ = true
+
+[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_bwg3g"]
+invert = true
+color_ramp = SubResource("Gradient_pq6g1")
+noise = SubResource("FastNoiseLite_ny2au")
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cocl3"]
+sky_top_color = Color(1, 0.623362, 0.566225, 1)
+sky_horizon_color = Color(0.444008, 0, 0.0193412, 1)
+ground_bottom_color = Color(0.201437, 1.13408e-06, 0.00391425, 1)
+ground_horizon_color = Color(0.444008, 0, 0.0193412, 1)
+
+[sub_resource type="Sky" id="Sky_w20ko"]
+sky_material = SubResource("ProceduralSkyMaterial_cocl3")
+
+[sub_resource type="Environment" id="Environment_xj34p"]
+background_mode = 2
+sky = SubResource("Sky_w20ko")
+tonemap_mode = 2
+glow_enabled = true
+volumetric_fog_albedo = Color(0, 0, 0, 1)
+volumetric_fog_emission = Color(0.740308, 0, 0.133459, 1)
+volumetric_fog_emission_energy = 0.1
+volumetric_fog_length = 128.0
+
+[node name="Level" type="Node3D"]
+script = ExtResource("1_cocl3")
+metadata/_custom_type_script = "uid://blqlv814q7nck"
+
+[node name="ProceduralGridmap" type="GridMap" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -16)
+mesh_library = ExtResource("1_m03e6")
+cell_size = Vector3(1, 1, 1)
+script = ExtResource("3_xj34p")
+_proceduralNoise = SubResource("NoiseTexture3D_bwg3g")
+_width = 256
+_height = 64
+_depth = 256
+metadata/_editor_floor_ = Vector3(0, -1, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_xj34p")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 64, 0)
+light_indirect_energy = 0.0
+light_volumetric_fog_energy = 0.0
+shadow_enabled = true
+
+[node name="Player" parent="." instance=ExtResource("1_eqpti")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(3, 1, 3)

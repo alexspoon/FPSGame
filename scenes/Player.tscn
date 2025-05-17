@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://c7p3ssubs3ofm"]
+[gd_scene load_steps=15 format=3 uid="uid://c7p3ssubs3ofm"]
 
 [ext_resource type="Script" uid="uid://bvmsyp4ogjup" path="res://scripts/components/PlayerMoveAndLookComponent.cs" id="1_p0vlq"]
 [ext_resource type="Script" uid="uid://cj15jyaf6wor4" path="res://scripts/components/PlayerHealthComponent.cs" id="2_v6fml"]
@@ -8,10 +8,15 @@
 [ext_resource type="FontFile" uid="uid://b1m5wftfrt8kf" path="res://assets/fonts/yoster.ttf" id="5_70d11"]
 [ext_resource type="PackedScene" uid="uid://c3acm5ptqv6em" path="res://scenes/customclasses/Projectile.tscn" id="5_cw2d6"]
 [ext_resource type="Script" uid="uid://bbayh2f8pqche" path="res://scripts/components/PlayerUIComponent.cs" id="6_khinc"]
+[ext_resource type="Script" uid="uid://bt5flbpg8in0h" path="res://scripts/components/PlayerSkillComponent.cs" id="7_bruh7"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_5q5h1"]
+radius = 0.4
+height = 1.8
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5q5h1"]
+radius = 0.4
+height = 1.8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v6fml"]
 content_margin_left = 2.0
@@ -33,7 +38,7 @@ outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_70d11"]
 font = ExtResource("5_70d11")
-font_size = 12
+font_size = 24
 outline_size = 4
 outline_color = Color(0, 0, 0, 1)
 
@@ -65,7 +70,7 @@ MoveMaxSpeed = 50.0
 MoveAcceleration = 75.0
 MoveDrag = 5.0
 JumpForce = 10.0
-MaxJumps = 2
+MaxJumps = 50
 Gravity = 9.82
 DashSpeedMultiplier = 3.0
 SlideSpeedMultiplier = 1.5
@@ -94,6 +99,9 @@ one_shot = true
 process_mode = 3
 script = ExtResource("6_khinc")
 
+[node name="PlayerSkillComponent" type="Node" parent="Components"]
+script = ExtResource("7_bruh7")
+
 [node name="Mesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_5q5h1")
 
@@ -101,7 +109,7 @@ mesh = SubResource("CapsuleMesh_5q5h1")
 shape = SubResource("CapsuleShape3D_5q5h1")
 
 [node name="Head" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
 [node name="FPSCamera" type="Camera3D" parent="Head"]
 physics_interpolation_mode = 1
@@ -167,6 +175,13 @@ grow_vertical = 2
 pivot_offset = Vector2(18, 18)
 texture = ExtResource("4_mdl7e")
 expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="FpsCounter" type="Label" parent="HUD"]
+layout_mode = 0
+anchor_right = 0.102431
+anchor_bottom = 0.0725309
+label_settings = SubResource("LabelSettings_70d11")
 metadata/_edit_use_anchors_ = true
 
 [node name="UI" type="Control" parent="."]

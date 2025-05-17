@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://bmkh3kqq3nrke"]
+
+[ext_resource type="Script" uid="uid://dg52bdmi0ewc4" path="res://scripts/components/GrenadeComponent.cs" id="1_vb7eo"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_8ihj0"]
+radius = 0.2
+
+[sub_resource type="SphereMesh" id="SphereMesh_vb7eo"]
+radius = 0.2
+height = 0.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_vb7eo"]
+radius = 2.0
+
+[node name="Grenade" type="RigidBody3D"]
+
+[node name="GrenadeComponent" type="Node" parent="."]
+script = ExtResource("1_vb7eo")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_8ihj0")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_vb7eo")
+
+[node name="AOE" type="Area3D" parent="."]
+
+[node name="AOECollision" type="CollisionShape3D" parent="AOE"]
+shape = SubResource("SphereShape3D_vb7eo")
+debug_color = Color(1, 0, 0, 0.235294)
+
+[node name="Fuse" type="Timer" parent="."]
+process_callback = 0
+one_shot = true

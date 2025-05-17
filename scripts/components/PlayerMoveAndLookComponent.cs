@@ -15,6 +15,7 @@ public partial class PlayerMoveAndLookComponent : Node
     private Control _hud;
     private Label _speedometer;
     private Timer _slideTimer;
+    private Label _fpsCounter;
     
     //State variables
     private bool _canDash;
@@ -75,6 +76,7 @@ public partial class PlayerMoveAndLookComponent : Node
         _hud = _player.GetNode<Control>("HUD");
         _speedometer = _hud.GetNode<Label>("Speedometer");
         _slideTimer = GetNode<Timer>("SlideTimer");
+        _fpsCounter = _hud.GetNode<Label>("FpsCounter");
         
         //Subscribe to signals
         _dashTimer.Timeout += DashTimerTimeout;
@@ -89,6 +91,12 @@ public partial class PlayerMoveAndLookComponent : Node
         Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
+    private void FpsCounter()
+    {
+        Engine.MaxFps = 165;
+        _fpsCounter.Text = "" + Engine.GetFramesPerSecond();
+    }
+    
     public void MoveAndLookSyncStats()
     {
         _moveMaxSpeed = _statsComponent.MoveMaxSpeed;
@@ -105,6 +113,7 @@ public partial class PlayerMoveAndLookComponent : Node
     
     public override void _Process(double delta)
     {
+        FpsCounter();
         if (!_statsComponent.Alive) return;
         Move(delta);
         DashUpdate((float)delta);
