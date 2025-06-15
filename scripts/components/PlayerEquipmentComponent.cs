@@ -10,6 +10,7 @@ public partial class PlayerEquipmentComponent : Node
     private RayCast3D _headRay;
     private Control _hud;
     private Panel _equipmentMenu;
+    private InventoryMenu _inventoryMenu;
     private ContextMenu _contextMenu;
     private Marker3D _interactPoint;
     public bool MenuVisible;
@@ -48,6 +49,7 @@ public partial class PlayerEquipmentComponent : Node
         _headRay = _head.GetNode<RayCast3D>("HeadRay");
         _interactPoint = _head.GetNode<Marker3D>("InteractCollider/InteractPoint");
         _hud = _player.GetNode<Control>("HUD");
+        _inventoryMenu = _hud.GetNode<InventoryMenu>("InventoryMenu");
         _contextMenu = _hud.GetNode<ContextMenu>("ContextMenu");
         _equipmentMenu = _hud.GetNode<Panel>("EquipmentMenu");
         _equipmentSlotPrimary = _equipmentMenu.GetNode<EquipmentSlot>("EquipmentSlotPrimary");
@@ -115,6 +117,7 @@ public partial class PlayerEquipmentComponent : Node
         _levelObjectPool.AddChild(rigid);
         rigid.GlobalRotation = -_head.GlobalRotation;
         rigid.GlobalPosition = _interactPoint.GlobalPosition;
+        if (item.HasInventory) _inventoryMenu.CloseInventory();
         item.Equipped = false;
         slot.EquippedItem = null;
         slot.OnSlotChange();
@@ -136,16 +139,17 @@ public partial class PlayerEquipmentComponent : Node
     {
         var itemComponent = targetObject.GetNodeOrNull<ItemComponent>("ItemComponent");
         if (itemComponent == null) return false;
-        GD.Print("Object has ItemComponent");
+        // GD.Print("Object has ItemComponent");
         var item = itemComponent.Item;
         if (item == null) return false;
         if (!item.Equippable) return false;
-        GD.Print("Item is equippable");
+        // GD.Print("Item is equippable");
         var slot = GetSlot(item.EquipmentType.ToString());
+        if (slot.EquippedItem != null) DropItem(slot.EquippedItem);
         slot.EquippedItem = item;
         item.Equipped = true;
         slot.OnSlotChange();
-        GD.Print("Equipped " + item.Name);
+        // GD.Print("Equipped " + item.Name);
         return true;
     }
 
@@ -160,19 +164,20 @@ public partial class PlayerEquipmentComponent : Node
 
     private void ContextMenuHandler()
     {
-        for (int i = 0; i < 7; i++)
+        if (_equipmentMenu.Visible == false) return;
+        if (!Input.IsActionJustPressed("inputRightMouse")) return;
+        for (int i = 0; i < _allSlots.Length; i++)
         {
-            if (_equipmentMenu.Visible == false) continue;
-            if (!Input.IsActionJustPressed("inputRightMouse")) continue;
             var slot = _allSlots[i];
             if (!slot.Hovered) continue;
-            if (slot.EquippedItem == null) 
+            if (slot.EquippedItem == null)
             {
-                GD.Print("slot " + slot.SlotType.ToString() + " empty");
+                // GD.Print("slot " + slot.SlotType.ToString() + " empty");
                 continue;
             }
             _contextMenu.SelectItem(slot.EquippedItem);
-            GD.Print("item " + slot.EquippedItem.Name + " selected");
+            // GD.Print("item " + slot.EquippedItem.Name + " selected");
+            break;
         }
     }
 }

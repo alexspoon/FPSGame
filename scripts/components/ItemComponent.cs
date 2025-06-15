@@ -1,3 +1,4 @@
+using System.Xml.Schema;
 using Godot;
 
 [GlobalClass]
@@ -11,8 +12,8 @@ public partial class ItemComponent : Node
 	[Export] private string _itemName;
 	[Export] private string _itemDescription;
 	[Export] private Texture2D _itemSprite;
-	[Export] private bool _itemEquippable;
 	[Export] private InventoryItem.EquipmentTypes _itemEquipmentType;
+	private InventoryComponent _itemInventory;
 	private PackedScene _itemPrefab;
 
     public override void _Ready()
@@ -35,7 +36,7 @@ public partial class ItemComponent : Node
     	}
     }
 
-    private bool TrySavePrefab()
+    private void TrySavePrefab()
     {
     	var scene = new PackedScene();
     	var children = _parent.GetChildren();
@@ -50,7 +51,8 @@ public partial class ItemComponent : Node
     	scene.Pack(_parent);
     	_parent.Transform = originalTransform;
     	ResourceSaver.Save(scene, "res://saved/inventoryItemPrefabs/" + _itemName + ".tscn");
-    	return true;
+		GD.PrintErr("Game needs to restart to correctly load saved item prefabs.");
+		GetTree().Quit();
     }
 
 	private void Init()
@@ -60,7 +62,11 @@ public partial class ItemComponent : Node
 		Item.Description = _itemDescription;
 		Item.Sprite = _itemSprite;
 		Item.Prefab = _itemPrefab;
-		Item.Equippable = _itemEquippable;
 		Item.EquipmentType = _itemEquipmentType;
+		_itemInventory = _parent.GetNodeOrNull<InventoryComponent>("InventoryComponent");
+		Item.Inventory = _itemInventory;
+
+		if (_itemEquipmentType != InventoryItem.EquipmentTypes.None) Item.Equippable = true;
+		if (_itemInventory != null) Item.HasInventory = true;
 	}
 }

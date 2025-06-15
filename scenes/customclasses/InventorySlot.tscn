@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://saygade3kyk1"]
+
+[ext_resource type="Texture2D" uid="uid://beey3ftaa3tt4" path="res://assets/textures/inventoryTile2.png" id="1_7bntm"]
+[ext_resource type="Script" uid="uid://df0opt6l5fxj3" path="res://scripts/customclasses/InventorySlot.cs" id="2_yuib3"]
+
+[node name="Slot" type="TextureRect"]
+texture_filter = 1
+anchors_preset = -1
+anchor_right = 0.055555556
+anchor_bottom = 0.09876543
+offset_right = -64.0
+offset_bottom = -64.0
+texture = ExtResource("1_7bntm")
+script = ExtResource("2_yuib3")
+metadata/_edit_use_anchors_ = true

@@ -4,20 +4,3 @@
 
 [node name="InventoryComponent" type="Node"]
 script = ExtResource("1_7l5og")
-
-[node name="HUDPanel" type="Panel" parent="."]
-visible = false
-anchors_preset = -1
-anchor_right = 0.16666667
-anchor_bottom = 0.19753087
-metadata/_edit_use_anchors_ = true
-
-[node name="InventoryGrid" type="GridContainer" parent="HUDPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-columns = 5
-metadata/_edit_use_anchors_ = true

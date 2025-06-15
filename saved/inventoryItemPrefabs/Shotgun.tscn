@@ -60,5 +60,5 @@ shape = SubResource("BoxShape3D_mg55r")
 script = ExtResource("2_ivyb1")
 _itemName = "Shotgun"
 _itemDescription = "A gun that shoots shots."
-_itemEquippable = true
+_itemEquipmentType = 1
 metadata/_custom_type_script = "uid://bbl8uba1w2bsp"

@@ -63,6 +63,5 @@ script = ExtResource("2_cogmh")
 _itemShape = Vector2i(2, 2)
 _itemName = "Hockey Mask"
 _itemDescription = "Basic protection for your face."
-_itemEquippable = true
-_itemEquipmentType = 4
+_itemEquipmentType = 5
 metadata/_custom_type_script = "uid://bbl8uba1w2bsp"

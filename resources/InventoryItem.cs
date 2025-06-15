@@ -12,6 +12,7 @@ public partial class InventoryItem : Resource
     public bool Equipped;
     public enum EquipmentTypes
     {
+        None,
         EquipmentPrimary,
         EquipmentSecondary,
         EquipmentMelee,
@@ -21,4 +22,7 @@ public partial class InventoryItem : Resource
         EquipmentLegs
     };
     public EquipmentTypes EquipmentType;
+    public InventoryComponent Inventory;
+    public bool HasInventory;
+    public bool InInventory;
 }

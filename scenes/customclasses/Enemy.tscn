@@ -36,6 +36,7 @@ script = ExtResource("1_yrlgc")
 
 [node name="NavigationAgent" type="NavigationAgent3D" parent="."]
 path_height_offset = -0.5
+simplify_path = true
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_057er")

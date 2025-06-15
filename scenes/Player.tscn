@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://c7p3ssubs3ofm"]
+[gd_scene load_steps=20 format=3 uid="uid://c7p3ssubs3ofm"]
 
 [ext_resource type="Script" uid="uid://bvmsyp4ogjup" path="res://scripts/components/PlayerMoveAndLookComponent.cs" id="1_p0vlq"]
 [ext_resource type="Script" uid="uid://cj15jyaf6wor4" path="res://scripts/components/PlayerHealthComponent.cs" id="2_v6fml"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://bbayh2f8pqche" path="res://scripts/components/PlayerUIComponent.cs" id="6_khinc"]
 [ext_resource type="Script" uid="uid://bt5flbpg8in0h" path="res://scripts/components/PlayerSkillComponent.cs" id="7_bruh7"]
 [ext_resource type="PackedScene" uid="uid://bll1fvx5y0mmq" path="res://scenes/customclasses/EquipmentSlot.tscn" id="8_bruh7"]
+[ext_resource type="PackedScene" uid="uid://chw4emui7u33k" path="res://scenes/customclasses/InventoryMenu.tscn" id="9_d3wef"]
 [ext_resource type="PackedScene" uid="uid://cg0qsrvgpq2lx" path="res://scenes/customclasses/ContextMenu.tscn" id="10_6eyey"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_5q5h1"]
@@ -293,6 +294,11 @@ horizontal_alignment = 1
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
 
+[node name="InventoryMenu" parent="HUD" instance=ExtResource("9_d3wef")]
+layout_mode = 1
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="HealthBar" type="ProgressBar" parent="HUD"]
 visible = false
 layout_mode = 1
@@ -333,9 +339,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="Marker2D" type="Marker2D" parent="HUD"]
-position = Vector2(576, 323.98438)
-
 [node name="FpsCounter" type="Label" parent="HUD"]
 layout_mode = 1
 anchors_preset = -1
@@ -358,7 +361,8 @@ layout_mode = 1
 anchor_right = 0.07638889
 anchor_bottom = 0.07171386
 
-[node name="TextureRect" type="TextureRect" parent="HUD"]
+[node name="Crosshair" type="TextureRect" parent="HUD"]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.484375

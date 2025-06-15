@@ -1,0 +1,65 @@
+[gd_scene load_steps=4 format=3 uid="uid://chw4emui7u33k"]
+
+[ext_resource type="Script" uid="uid://di28h1ik4ughl" path="res://scripts/customclasses/InventoryMenu.cs" id="1_j73ri"]
+[ext_resource type="FontFile" uid="uid://b1m5wftfrt8kf" path="res://assets/fonts/yoster.ttf" id="1_n8ys6"]
+[ext_resource type="PackedScene" uid="uid://saygade3kyk1" path="res://scenes/customclasses/InventorySlot.tscn" id="2_j73ri"]
+
+[node name="InventoryMenu" type="Panel"]
+anchors_preset = -1
+anchor_left = 0.3888889
+anchor_top = 0.049382716
+anchor_right = 0.6666667
+anchor_bottom = 0.8888889
+script = ExtResource("1_j73ri")
+_slot = ExtResource("2_j73ri")
+metadata/_edit_use_anchors_ = true
+
+[node name="InventoryContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+metadata/_edit_use_anchors_ = true
+
+[node name="Header" type="HBoxContainer" parent="InventoryContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 0
+metadata/_edit_use_anchors_ = true
+
+[node name="SortButton" type="Button" parent="InventoryContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("1_n8ys6")
+theme_override_font_sizes/font_size = 24
+text = "Sort"
+
+[node name="SpawnButton" type="Button" parent="InventoryContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("1_n8ys6")
+theme_override_font_sizes/font_size = 24
+text = "Spawn"
+
+[node name="CloseButton" type="Button" parent="InventoryContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("1_n8ys6")
+theme_override_font_sizes/font_size = 24
+text = "Close"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="InventoryContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="InventoryGrid" type="GridContainer" parent="InventoryContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 5

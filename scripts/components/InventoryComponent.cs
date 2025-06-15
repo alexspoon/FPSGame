@@ -1,22 +1,18 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 
 [GlobalClass]
 public partial class InventoryComponent : Node
 {
-    private int _sizeX = 5;
-    private int _sizeY = 5;
+    [Export] public int Width;
+    [Export] public int Height;
+    public bool IsOpen;
+    public int[,] Grid;
+    public List<InventoryItem> Items;
 
-    private int[,] _grid;
-    private GridContainer _hudGrid;
-    private List<InventoryItem> _items;
- 
     public override void _Ready()
     {
-        _grid = new int[_sizeX, _sizeY];
-        _hudGrid = GetNode<GridContainer>("HUDPanel/InventoryGrid");
-        
+        Grid = new int[Width, Height];
     }
-    
-  
 }
