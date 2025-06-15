@@ -1,14 +1,15 @@
-[gd_scene load_steps=15 format=3 uid="uid://c7p3ssubs3ofm"]
+[gd_scene load_steps=19 format=3 uid="uid://c7p3ssubs3ofm"]
 
 [ext_resource type="Script" uid="uid://bvmsyp4ogjup" path="res://scripts/components/PlayerMoveAndLookComponent.cs" id="1_p0vlq"]
 [ext_resource type="Script" uid="uid://cj15jyaf6wor4" path="res://scripts/components/PlayerHealthComponent.cs" id="2_v6fml"]
 [ext_resource type="Script" uid="uid://3pcsyxk2vfgv" path="res://scripts/components/PlayerStatsComponent.cs" id="3_3li8b"]
 [ext_resource type="Texture2D" uid="uid://beo8k1527w5b" path="res://assets/textures/crosshair009.png" id="4_mdl7e"]
-[ext_resource type="Script" uid="uid://3bpajiqoi8i" path="res://scripts/components/PlayerWeaponComponent.cs" id="4_qu4a1"]
 [ext_resource type="FontFile" uid="uid://b1m5wftfrt8kf" path="res://assets/fonts/yoster.ttf" id="5_70d11"]
-[ext_resource type="PackedScene" uid="uid://c3acm5ptqv6em" path="res://scenes/customclasses/Projectile.tscn" id="5_cw2d6"]
+[ext_resource type="Script" uid="uid://c6shvleb2bpx" path="res://scripts/components/PlayerEquipmentComponent.cs" id="6_bruh7"]
 [ext_resource type="Script" uid="uid://bbayh2f8pqche" path="res://scripts/components/PlayerUIComponent.cs" id="6_khinc"]
 [ext_resource type="Script" uid="uid://bt5flbpg8in0h" path="res://scripts/components/PlayerSkillComponent.cs" id="7_bruh7"]
+[ext_resource type="PackedScene" uid="uid://bll1fvx5y0mmq" path="res://scenes/customclasses/EquipmentSlot.tscn" id="8_bruh7"]
+[ext_resource type="PackedScene" uid="uid://cg0qsrvgpq2lx" path="res://scenes/customclasses/ContextMenu.tscn" id="10_6eyey"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_5q5h1"]
 radius = 0.4
@@ -17,6 +18,21 @@ height = 1.8
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5q5h1"]
 radius = 0.4
 height = 1.8
+
+[sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_bruh7"]
+length = 0.1
+slide_on_slope = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_bruh7"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_6eyey"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_70d11"]
+font = ExtResource("5_70d11")
+font_size = 12
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v6fml"]
 content_margin_left = 2.0
@@ -31,12 +47,6 @@ corner_radius_bottom_left = 6
 corner_detail = 6
 
 [sub_resource type="LabelSettings" id="LabelSettings_cw2d6"]
-font = ExtResource("5_70d11")
-font_size = 24
-outline_size = 4
-outline_color = Color(0, 0, 0, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_70d11"]
 font = ExtResource("5_70d11")
 font_size = 24
 outline_size = 4
@@ -66,34 +76,16 @@ script = ExtResource("2_v6fml")
 [node name="PlayerStatsComponent" type="Node" parent="Components"]
 script = ExtResource("3_3li8b")
 MaxHealth = 100.0
-MoveMaxSpeed = 50.0
-MoveAcceleration = 75.0
+MoveMaxSpeed = 30.0
+MoveAcceleration = 50.0
 MoveDrag = 5.0
-JumpForce = 10.0
+JumpForce = 7.5
 MaxJumps = 50
 Gravity = 9.82
-DashSpeedMultiplier = 3.0
+DashSpeedMultiplier = 2.0
 SlideSpeedMultiplier = 1.5
 DashLength = 0.2
 DashCooldown = 1.0
-WeaponDamage = 10.0
-WeaponFireRate = 0.1
-WeaponReloadTime = 1.0
-WeaponVelocity = 50.0
-WeaponRange = 20.0
-WeaponAmmoCount = 128
-WeaponMagazineSize = 8
-WeaponShotCount = 1
-
-[node name="PlayerWeaponComponent" type="Node" parent="Components"]
-script = ExtResource("4_qu4a1")
-_projectile = ExtResource("5_cw2d6")
-
-[node name="FireRateTimer" type="Timer" parent="Components/PlayerWeaponComponent"]
-one_shot = true
-
-[node name="ReloadTimer" type="Timer" parent="Components/PlayerWeaponComponent"]
-one_shot = true
 
 [node name="PlayerUIComponent" type="Node" parent="Components"]
 process_mode = 3
@@ -101,6 +93,9 @@ script = ExtResource("6_khinc")
 
 [node name="PlayerSkillComponent" type="Node" parent="Components"]
 script = ExtResource("7_bruh7")
+
+[node name="PlayerEquipmentComponent" type="Node" parent="Components"]
+script = ExtResource("6_bruh7")
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_5q5h1")
@@ -111,11 +106,30 @@ shape = SubResource("CapsuleShape3D_5q5h1")
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
+[node name="Arm" type="SpringArm3D" parent="Head"]
+transform = Transform3D(-1, 0, -9.68575e-08, 0, 1, 0, 9.68575e-08, 0, -1, 0.5, -0.2, -0.2)
+visible = false
+shape = SubResource("SeparationRayShape3D_bruh7")
+spring_length = 0.25
+
+[node name="Hand" type="Node3D" parent="Head/Arm"]
+transform = Transform3D(-1, 0, 9.68575e-08, 0, 1, 0, -9.68575e-08, 0, -1, -5.96046e-08, 2.98023e-08, 0)
+
+[node name="HandMesh" type="MeshInstance3D" parent="Head/Arm/Hand"]
+mesh = SubResource("BoxMesh_bruh7")
+
 [node name="FPSCamera" type="Camera3D" parent="Head"]
-physics_interpolation_mode = 1
+physics_interpolation_mode = 2
 
 [node name="HeadRay" type="RayCast3D" parent="Head"]
+visible = false
 target_position = Vector3(0, 0, -10)
+
+[node name="InteractCollider" type="SpringArm3D" parent="Head"]
+shape = SubResource("SeparationRayShape3D_6eyey")
+spring_length = -0.75
+
+[node name="InteractPoint" type="Marker3D" parent="Head/InteractCollider"]
 
 [node name="HUD" type="Control" parent="."]
 layout_mode = 3
@@ -126,7 +140,161 @@ grow_horizontal = 2
 grow_vertical = 2
 metadata/_edit_use_anchors_ = true
 
+[node name="EquipmentMenu" type="Panel" parent="HUD"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0277778
+anchor_top = 0.0493827
+anchor_right = 0.361111
+anchor_bottom = 0.888889
+metadata/_edit_use_anchors_ = true
+
+[node name="EquipmentSlotPrimary" parent="HUD/EquipmentMenu" instance=ExtResource("8_bruh7")]
+layout_mode = 1
+anchor_left = 0.083333306
+anchor_top = 0.058823507
+anchor_right = 0.25000003
+anchor_bottom = 0.17647061
+offset_top = 1.5258789e-05
+
+[node name="EquipmentSlotSecondary" parent="HUD/EquipmentMenu" instance=ExtResource("8_bruh7")]
+layout_mode = 1
+anchor_top = 0.058823507
+anchor_bottom = 0.17647061
+offset_top = 1.5258789e-05
+SlotType = 1
+
+[node name="EquipmentSlotMelee" parent="HUD/EquipmentMenu" instance=ExtResource("8_bruh7")]
+layout_mode = 1
+anchor_left = 0.7500003
+anchor_top = 0.058823507
+anchor_right = 0.91666704
+anchor_bottom = 0.17647061
+offset_top = 1.5258789e-05
+SlotType = 2
+
+[node name="EquipmentSlotBack" parent="HUD/EquipmentMenu" instance=ExtResource("8_bruh7")]
+layout_mode = 1
+anchor_left = 0.7500003
+anchor_top = 0.52941173
+anchor_right = 0.9166669
+anchor_bottom = 0.64705867
+offset_top = 1.5258789e-05
+SlotType = 3
+
+[node name="EquipmentSlotHead" parent="HUD/EquipmentMenu" instance=ExtResource("8_bruh7")]
+layout_mode = 1
+offset_top = 1.5258789e-05
+SlotType = 4
+
+[node name="EquipmentSlotChest" parent="HUD/EquipmentMenu" instance=ExtResource("8_bruh7")]
+layout_mode = 1
+anchor_top = 0.52941173
+anchor_bottom = 0.64705867
+offset_top = 1.5258789e-05
+SlotType = 5
+
+[node name="EquipmentSlotLegs" parent="HUD/EquipmentMenu" instance=ExtResource("8_bruh7")]
+layout_mode = 1
+anchor_top = 0.7647058
+anchor_bottom = 0.8823527
+offset_top = 1.5258789e-05
+SlotType = 6
+
+[node name="LabelPrimary" type="Label" parent="HUD/EquipmentMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.10416665
+anchor_top = 0.014705898
+anchor_right = 0.23437503
+anchor_bottom = 0.056985304
+text = "Primary"
+label_settings = SubResource("LabelSettings_70d11")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LabelSecondary" type="Label" parent="HUD/EquipmentMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.41145846
+anchor_top = 0.014705898
+anchor_right = 0.5937502
+anchor_bottom = 0.0569853
+offset_right = 1.5258789e-05
+text = "Secondary"
+label_settings = SubResource("LabelSettings_70d11")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LabelMelee" type="Label" parent="HUD/EquipmentMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.7500003
+anchor_top = 0.025735306
+anchor_right = 0.9166671
+anchor_bottom = 0.058823522
+text = "Melee"
+label_settings = SubResource("LabelSettings_70d11")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LabelBack" type="Label" parent="HUD/EquipmentMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.7500003
+anchor_top = 0.49999994
+anchor_right = 0.9166671
+anchor_bottom = 0.53308815
+text = "Back"
+label_settings = SubResource("LabelSettings_70d11")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LabelHead" type="Label" parent="HUD/EquipmentMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.41666678
+anchor_top = 0.26470587
+anchor_right = 0.5833336
+anchor_bottom = 0.29779407
+text = "Head"
+label_settings = SubResource("LabelSettings_70d11")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LabelChest" type="Label" parent="HUD/EquipmentMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.41666678
+anchor_top = 0.49999994
+anchor_right = 0.5833336
+anchor_bottom = 0.53308815
+text = "Chest"
+label_settings = SubResource("LabelSettings_70d11")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LabelLegs" type="Label" parent="HUD/EquipmentMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.41666678
+anchor_top = 0.73529404
+anchor_right = 0.5833336
+anchor_bottom = 0.76838225
+text = "Legs"
+label_settings = SubResource("LabelSettings_70d11")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
 [node name="HealthBar" type="ProgressBar" parent="HUD"]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.942901
@@ -138,6 +306,7 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_v6fml")
 metadata/_edit_use_anchors_ = true
 
 [node name="Speedometer" type="Label" parent="HUD"]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.00260417
@@ -151,6 +320,7 @@ vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="AmmoCounter" type="Label" parent="HUD"]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.423611
@@ -163,25 +333,48 @@ horizontal_alignment = 1
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="Crosshair" type="TextureRect" parent="HUD"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.484375
-anchor_top = 0.472222
-anchor_right = 0.515625
-anchor_bottom = 0.527778
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset = Vector2(18, 18)
-texture = ExtResource("4_mdl7e")
-expand_mode = 1
-metadata/_edit_use_anchors_ = true
+[node name="Marker2D" type="Marker2D" parent="HUD"]
+position = Vector2(576, 323.98438)
 
 [node name="FpsCounter" type="Label" parent="HUD"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = -1
 anchor_right = 0.102431
 anchor_bottom = 0.0725309
 label_settings = SubResource("LabelSettings_70d11")
+metadata/_edit_use_anchors_ = true
+
+[node name="DebugInfo" type="Label" parent="HUD"]
+layout_mode = 0
+anchor_left = 0.0763181
+anchor_top = 0.392859
+anchor_right = 0.0763181
+anchor_bottom = 0.392859
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="ContextMenu" parent="HUD" instance=ExtResource("10_6eyey")]
+layout_mode = 1
+anchor_right = 0.07638889
+anchor_bottom = 0.07171386
+
+[node name="TextureRect" type="TextureRect" parent="HUD"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.484375
+anchor_top = 0.4722222
+anchor_right = 0.515625
+anchor_bottom = 0.5277778
+offset_left = -18.0
+offset_top = -18.0
+offset_right = 18.0
+offset_bottom = 18.00003
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+pivot_offset = Vector2(36, 36)
+texture = ExtResource("4_mdl7e")
+stretch_mode = 3
 metadata/_edit_use_anchors_ = true
 
 [node name="UI" type="Control" parent="."]
@@ -238,3 +431,7 @@ size_flags_vertical = 3
 theme_override_fonts/font = ExtResource("5_70d11")
 theme_override_font_sizes/font_size = 24
 text = "Quit"
+
+[node name="GPUParticlesCollisionBox3D" type="GPUParticlesCollisionBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00338745, 0.00158691, 0.0045166)
+size = Vector3(0.801941, 1.79663, 0.810791)

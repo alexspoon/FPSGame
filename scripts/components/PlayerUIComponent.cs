@@ -7,14 +7,15 @@ public partial class PlayerUIComponent : Node
     //Node references
     private Node _componentContainer;
     private CharacterBody3D _player;
-    private Control _hud;
     private Control _ui;
+    private Control _hud;
     private Panel _pauseMenu;
     private Button _resumeButton;
     private Button _settingsButton;
     private Button _quitButton;
 
     private bool _uiVisible;
+    public bool EquipmentMenuVisible;
 
     public override void _Ready()
     {

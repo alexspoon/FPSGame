@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b7q5ii4ha3ab8"]
 
 [ext_resource type="Script" uid="uid://d4fx5g4h1ub24" path="res://scripts/singletons/LevelManager.cs" id="1_5m2yb"]
-[ext_resource type="PackedScene" uid="uid://btblem7ybd0n3" path="res://scenes/levels/ProceduralLevel.tscn" id="2_toqdr"]
+[ext_resource type="PackedScene" uid="uid://bddamcig7tmgi" path="res://scenes/levels/TestLevel.tscn" id="2_toqdr"]
 
 [node name="LevelManager" type="Node"]
 script = ExtResource("1_5m2yb")

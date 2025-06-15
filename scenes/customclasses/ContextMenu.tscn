@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://cg0qsrvgpq2lx"]
+
+[ext_resource type="Script" uid="uid://dq1qedxx0tdy5" path="res://scripts/customclasses/ContextMenu.cs" id="1_r3bf5"]
+[ext_resource type="FontFile" uid="uid://b1m5wftfrt8kf" path="res://assets/fonts/yoster.ttf" id="1_sk6xw"]
+
+[node name="ContextMenu" type="Panel"]
+anchors_preset = -1
+anchor_right = 0.055555556
+anchor_bottom = 0.09876543
+script = ExtResource("1_r3bf5")
+metadata/_edit_use_anchors_ = true
+
+[node name="ButtonContainer" type="BoxContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+vertical = true
+metadata/_edit_use_anchors_ = true
+
+[node name="EquipButton" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("1_sk6xw")
+theme_override_font_sizes/font_size = 12
+text = "Equip"
+
+[node name="DropButton" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("1_sk6xw")
+theme_override_font_sizes/font_size = 12
+text = "Drop"

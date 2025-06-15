@@ -6,7 +6,9 @@ public partial class PlayerMoveAndLookComponent : Node
     //Node references
     private Node _componentContainer;
     private PlayerHealthComponent _healthComponent;
+    private PlayerEquipmentComponent _equipmentComponent;
     private PlayerStatsComponent _statsComponent;
+    private PlayerUIComponent _uiComponent;
     private CharacterBody3D _player;
     private Node3D _head;
     private Camera3D _camera;
@@ -16,6 +18,7 @@ public partial class PlayerMoveAndLookComponent : Node
     private Label _speedometer;
     private Timer _slideTimer;
     private Label _fpsCounter;
+    private RayCast3D _headRay;
     
     //State variables
     private bool _canDash;
@@ -51,6 +54,8 @@ public partial class PlayerMoveAndLookComponent : Node
     
     public override void _Input(InputEvent @event)
     {
+        if (!_statsComponent.Alive) return;
+        if (_equipmentComponent.MenuVisible) return;
         if (@event is InputEventMouseMotion)
         {
             var motion = (InputEventMouseMotion) @event;
@@ -68,6 +73,8 @@ public partial class PlayerMoveAndLookComponent : Node
         _componentContainer = GetParent<Node>();
         _statsComponent = _componentContainer.GetNode<PlayerStatsComponent>("PlayerStatsComponent");
         _healthComponent = _componentContainer.GetNode<PlayerHealthComponent>("PlayerHealthComponent");
+        _uiComponent = _componentContainer.GetNode<PlayerUIComponent>("PlayerUIComponent");
+        _equipmentComponent = _componentContainer.GetNode<PlayerEquipmentComponent>("PlayerEquipmentComponent");
         _player = _componentContainer.GetParent<CharacterBody3D>();
         _head = _player.GetNode<Node3D>("Head");
         _camera = _head.GetNode<Camera3D>("FPSCamera");
@@ -77,6 +84,7 @@ public partial class PlayerMoveAndLookComponent : Node
         _speedometer = _hud.GetNode<Label>("Speedometer");
         _slideTimer = GetNode<Timer>("SlideTimer");
         _fpsCounter = _hud.GetNode<Label>("FpsCounter");
+        _headRay = _head.GetNode<RayCast3D>("HeadRay");
         
         //Subscribe to signals
         _dashTimer.Timeout += DashTimerTimeout;
@@ -93,7 +101,7 @@ public partial class PlayerMoveAndLookComponent : Node
 
     private void FpsCounter()
     {
-        Engine.MaxFps = 165;
+        // Engine.MaxFps = 165;
         _fpsCounter.Text = "" + Engine.GetFramesPerSecond();
     }
     
@@ -111,10 +119,11 @@ public partial class PlayerMoveAndLookComponent : Node
         _slideSpeedMultiplier = _statsComponent.SlideSpeedMultiplier;
     }
     
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         FpsCounter();
         if (!_statsComponent.Alive) return;
+        // if (_uiComponent.EquipmentMenuVisible) return;
         Move(delta);
         DashUpdate((float)delta);
     }
@@ -182,6 +191,7 @@ public partial class PlayerMoveAndLookComponent : Node
         if (_player.IsOnFloor())
         {
             ResetJumps();
+            _targetVelocity.Y = 0f;
         }
         
         if (!_player.IsOnFloor())

@@ -41,9 +41,9 @@ public partial class EnemyHealthComponent : Node
         
     }
 
-    public void Damage(float damage)
+    public void Damage(float damage, float multiplier)
     {
-        _currentHealth -= damage - _armor;
+        _currentHealth -= damage * multiplier - _armor;
         _healthBar.Value = _currentHealth;
         if (_currentHealth <= 0)
         {

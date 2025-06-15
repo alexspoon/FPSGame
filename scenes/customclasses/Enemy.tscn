@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cwo4bn7huxhl"]
+[gd_scene load_steps=10 format=3 uid="uid://cwo4bn7huxhl"]
 
 [ext_resource type="Script" uid="uid://dpdncbj4aw05k" path="res://scripts/components/EnemyHealthComponent.cs" id="1_057er"]
 [ext_resource type="Script" uid="uid://doi7c40yqlo76" path="res://scripts/customclasses/Enemy.cs" id="1_yrlgc"]
@@ -26,8 +26,16 @@ corner_detail = 6
 [sub_resource type="ViewportTexture" id="ViewportTexture_057er"]
 viewport_path = NodePath("HealthBarViewport")
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mlycb"]
+height = 1.8
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_yrlgc"]
+
 [node name="Enemy" type="CharacterBody3D"]
 script = ExtResource("1_yrlgc")
+
+[node name="NavigationAgent" type="NavigationAgent3D" parent="."]
+path_height_offset = -0.5
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_057er")
@@ -59,3 +67,19 @@ metadata/_edit_use_anchors_ = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 billboard = 1
 texture = SubResource("ViewportTexture_057er")
+
+[node name="TorsoHurtBox" type="Area3D" parent="."]
+
+[node name="Torso" type="CollisionShape3D" parent="TorsoHurtBox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+shape = SubResource("CapsuleShape3D_mlycb")
+
+[node name="HeadHurtBox" type="Area3D" parent="."]
+
+[node name="Head" type="CollisionShape3D" parent="HeadHurtBox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("SphereShape3D_yrlgc")
+
+[node name="PathfindTimer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 0.1
